@@ -15,9 +15,12 @@ class Avaliador
 	        $this->valorMedio = 0;
 	        return true;
 	    }
-	    
+
+	    $valores = [];
 	    $total = 0;
 	    foreach ($leilao->getLances() as $lance) {
+	        $valores[] = $lance->getValor();
+	        
 			if ($lance->getValor() < $this->menorValor) {
 				$this->menorValor = $lance->getValor();
 			}
@@ -26,13 +29,21 @@ class Avaliador
 			}
 			$total += $lance->getValor();
 		}
-		
+
+		rsort($valores);
+		$this->tresMaiores = array_chunk($valores, 3)[0];
+
 		$this->valorMedio = ($total / count($leilao->getLances()));
 	}
 
 	public function getValorMedio()
 	{
 	    return $this->valorMedio;
+	}
+	
+	public function getTresMaiores()
+	{
+	    return $this->tresMaiores;
 	}
 
 	public function getMaiorValor()
