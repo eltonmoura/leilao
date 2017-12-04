@@ -1,7 +1,10 @@
 <?php
-namespace src\br\com\caelum\leilao\dominio;
+namespace tests\br\com\caelum\leilao;
 
 use PHPUnit\Framework\TestCase;
+use src\br\com\caelum\leilao\dominio\FiltroDeLances;
+use src\br\com\caelum\leilao\dominio\Lance;
+use src\br\com\caelum\leilao\dominio\Usuario;
 
 class FiltroDeLancesTest extends TestCase
 {
@@ -9,31 +12,31 @@ class FiltroDeLancesTest extends TestCase
     {
         $joao = new Usuario('João');
         $filtro = new FiltroDeLances();
-        
+
         $resultado = $filtro->filtra([
-            new Lance($joao, 2000),
-            new Lance($joao, 1000),
-            new Lance($joao, 3000),
-            new Lance($joao, 800),
+            new Lance(1000, $joao),
+            new Lance(3000, $joao),
+            new Lance(2000, $joao),
+            new Lance(800, $joao),
         ]);
-        
+
         $this->assertEquals(1, count($resultado));
         $this->assertEquals(2000, $resultado[0]->getValor(), 0.00001);
     }
-    
+
     public function testDeveSelecionarLancesEntre500E3000()
     {
         $joao = new Usuario('João');
         $filtro = new FiltroDeLances();
-        
+
         $resultado = $filtro->filtra([
-            new Lance($joao, 600),
-            new Lance($joao, 500),
-            new Lance($joao, 700),
-            new Lance($joao, 800),
+            new Lance(600, $joao),
+            new Lance(500, $joao),
+            new Lance(700, $joao),
+            new Lance(800, $joao),
         ]);
-        
+
         $this->assertEquals(1, count($resultado));
         $this->assertEquals(600, $resultado[0]->getValor(), 0.00001);
-    }   
+    }
 }

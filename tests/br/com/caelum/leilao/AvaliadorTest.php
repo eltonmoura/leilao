@@ -1,7 +1,11 @@
 <?php
-namespace src\br\com\caelum\leilao\dominio;
+namespace tests\br\com\caelum\leilao;
 
 use PHPUnit\Framework\TestCase;
+use src\br\com\caelum\leilao\dominio\Avaliador;
+use src\br\com\caelum\leilao\dominio\Lance;
+use src\br\com\caelum\leilao\dominio\Leilao;
+use src\br\com\caelum\leilao\dominio\Usuario;
 
 /**
  * Avaliador test case.
@@ -88,7 +92,7 @@ class AvaliadorTest extends TestCase
         $this->assertEquals(0, $avaliador->getMaiorValor());
         $this->assertEquals(0, $avaliador->getValorMedio());
     }
-    
+
     public function testDeveEncontrarOsTresMaioresLances()
     {
         $maria = new Usuario('Maria');

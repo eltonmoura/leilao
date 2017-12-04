@@ -54,5 +54,5 @@ class Avaliador
     public function getMenorValor()
     {
         return $this->menorValor;
-    }   
+    }
 }
