@@ -10,4 +10,9 @@ class Usuario
     {
         $this->nome = $nome;
     }
+
+    public function getNome()
+    {
+        return $this->nome;
+    }
 }
