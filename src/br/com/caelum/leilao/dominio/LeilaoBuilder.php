@@ -22,6 +22,12 @@ class LeilaoBuilder
         return $this;
     }
     
+    public function naData(\DateTime $data)
+    {
+        $this->leilao->setData($data);
+        return $this;
+    }
+
     public function cria()
     {
         return $this->leilao;

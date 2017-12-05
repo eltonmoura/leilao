@@ -2,10 +2,8 @@
 namespace tests\br\com\caelum\leilao;
 
 use PHPUnit\Framework\TestCase;
-use src\br\com\caelum\leilao\dominio\Lance;
-use src\br\com\caelum\leilao\dominio\Usuario;
-use src\br\com\caelum\leilao\dominio\Leilao;
 use src\br\com\caelum\leilao\dominio\LeilaoBuilder;
+use src\br\com\caelum\leilao\dominio\Usuario;
 
 class LeilaoTest extends TestCase
 {

@@ -7,11 +7,14 @@ class Leilao
     private $lances;
     private $qtdLances;
     private $maiorLance = -INF;
-    
+    private $data;
+    private $encerrado;
+
     public function __construct($descricao = '', array $lances = [])
     {
         $this->descricao = $descricao;
         $this->lances = $lances;
+        $this->encerrado = false;
     }
 
     public function propoe(Lance $lance)
@@ -62,14 +65,39 @@ class Leilao
     {
         return $this->lances;
     }
-    
+
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    public function getEncerrado()
+    {
+        return $this->encerrado;
+    }
+
     public function setDescricao($descricao)
     {
         $this->descricao = $descricao;
     }
-    
+
     public function setLances(array $lances)
     {
         $this->lances = $lances;
+    }
+
+    public function setData(\DateTime $data)
+    {
+        $this->data = $data;
+    }
+
+    public function setEncerrado(bool $encerrado)
+    {
+        $this->encerrado = $encerrado;
+    }
+
+    public function encerra()
+    {
+        $this->encerrado = true;
     }
 }
