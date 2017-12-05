@@ -6,12 +6,42 @@ use src\br\com\caelum\leilao\dominio\Avaliador;
 use src\br\com\caelum\leilao\dominio\Lance;
 use src\br\com\caelum\leilao\dominio\Leilao;
 use src\br\com\caelum\leilao\dominio\Usuario;
+use src\br\com\caelum\leilao\dominio\LeilaoBuilder;
 
 /**
  * Avaliador test case.
  */
 class AvaliadorTest extends TestCase
 {
+    private $avaliador;
+    private $leilaoBuilder;
+
+    /**
+     * @before
+     */
+    public function antes()
+    {
+        #echo "Antes\n";
+        $this->avaliador = new Avaliador();
+        $this->leilaoBuilder = new LeilaoBuilder();
+    }
+
+    /**
+     * @after
+     */
+    public function depois()
+    {
+        #echo "Fim\n";
+    }
+
+    /**
+     * @afterClass
+     */
+    public static function depoisDaClasse()
+    {
+        #echo "FimdaClasse\n";
+    }
+
     public function testAvaliaComLancesCrescentes()
     {
         $maria = new Usuario('Maria');
@@ -20,22 +50,20 @@ class AvaliadorTest extends TestCase
         $pedro = new Usuario('Pedro');
         $tiago = new Usuario('Tiago');
 
-        $lances = [
-            new Lance(150.0, $maria),
-            new Lance(250.0, $joao),
-            new Lance(350.0, $jose),
-            new Lance(400.0, $pedro),
-            new Lance(500.0, $tiago),
-        ];
+        $leilao = $this->leilaoBuilder
+            ->comDescricao('Mac da RF')
+            ->comLance(150.0, $maria)
+            ->comLance(250.0, $joao)
+            ->comLance(350.0, $jose)
+            ->comLance(400.0, $pedro)
+            ->comLance(500.0, $tiago)
+            ->cria();
 
-        $leilao = new Leilao('Mac da RF', $lances);
-        
-        $avaliador = new Avaliador();
-        $avaliador->avalia($leilao);
-      
-        $this->assertEquals(150, $avaliador->getMenorValor());
-        $this->assertEquals(500, $avaliador->getMaiorValor());
-        $this->assertEquals(330, $avaliador->getValorMedio());
+        $this->avaliador->avalia($leilao);
+
+        $this->assertEquals(150, $this->avaliador->getMenorValor());
+        $this->assertEquals(500, $this->avaliador->getMaiorValor());
+        $this->assertEquals(330, $this->avaliador->getValorMedio());
     }
 
     public function testAvaliaComLancesDecrescentes()
@@ -43,54 +71,51 @@ class AvaliadorTest extends TestCase
         $joao = new Usuario('Joao');
         $pedro = new Usuario('Pedro');
         
-        $lances = [
-            new Lance(700.0, $joao),
-            new Lance(600.0, $pedro),
-            new Lance(500.0, $joao),
-            new Lance(400.0, $pedro),
-            new Lance(300.0, $joao),
-        ];
-        
-        $leilao = new Leilao('Mac da RF', $lances);
-        
-        $avaliador = new Avaliador();
-        $avaliador->avalia($leilao);
-        
-        $this->assertEquals(300, $avaliador->getMenorValor());
-        $this->assertEquals(700, $avaliador->getMaiorValor());
-        $this->assertEquals(500, $avaliador->getValorMedio());
+        $leilao = $this->leilaoBuilder
+            ->comDescricao('Mac da RF')
+            ->comLance(700.0, $joao)
+            ->comLance(600.0, $pedro)
+            ->comLance(500.0, $joao)
+            ->comLance(400.0, $pedro)
+            ->comLance(300.0, $joao)
+            ->cria();
+
+        $this->avaliador->avalia($leilao);
+
+        $this->assertEquals(700, $this->avaliador->getMenorValor());
+        $this->assertEquals(700, $this->avaliador->getMaiorValor());
+        $this->assertEquals(700, $this->avaliador->getValorMedio());
     }
-    
+
     public function testAvaliaComUmLance()
     {
         $joao = new Usuario('Joao');
         
-        $lances = [
-            new Lance(300.0, $joao),
-        ];
+        $leilao = $this->leilaoBuilder
+            ->comDescricao('Mac da RF')
+            ->comLance(300.0, $joao)
+            ->cria();
         
-        $leilao = new Leilao('Mac da RF', $lances);
+        $this->avaliador->avalia($leilao);
         
-        $avaliador = new Avaliador();
-        $avaliador->avalia($leilao);
-        
-        $this->assertEquals(300, $avaliador->getMenorValor());
-        $this->assertEquals(300, $avaliador->getMaiorValor());
-        $this->assertEquals(300, $avaliador->getValorMedio());
+        $this->assertEquals(300, $this->avaliador->getMenorValor());
+        $this->assertEquals(300, $this->avaliador->getMaiorValor());
+        $this->assertEquals(300, $this->avaliador->getValorMedio());
     }
     
     public function testAvaliaSemLances()
     {
         $lances = [];
+
+        $leilao = $this->leilaoBuilder
+            ->comDescricao('Mac da RF')
+            ->cria();
         
-        $leilao = new Leilao('Mac da RF', $lances);
+        $this->avaliador->avalia($leilao);
         
-        $avaliador = new Avaliador();
-        $avaliador->avalia($leilao);
-        
-        $this->assertEquals(0, $avaliador->getMenorValor());
-        $this->assertEquals(0, $avaliador->getMaiorValor());
-        $this->assertEquals(0, $avaliador->getValorMedio());
+        $this->assertEquals(0, $this->avaliador->getMenorValor());
+        $this->assertEquals(0, $this->avaliador->getMaiorValor());
+        $this->assertEquals(0, $this->avaliador->getValorMedio());
     }
 
     public function testDeveEncontrarOsTresMaioresLances()
@@ -101,20 +126,18 @@ class AvaliadorTest extends TestCase
         $pedro = new Usuario('Pedro');
         $tiago = new Usuario('Tiago');
         
-        $lances = [
-            new Lance(150.0, $maria),
-            new Lance(250.0, $joao),
-            new Lance(350.0, $jose),
-            new Lance(400.0, $pedro),
-            new Lance(500.0, $tiago),
-        ];
+        $leilao = $this->leilaoBuilder
+            ->comDescricao('Mac da RF')
+            ->comLance(150.0, $maria)
+            ->comLance(250.0, $joao)
+            ->comLance(350.0, $jose)
+            ->comLance(400.0, $pedro)
+            ->comLance(500.0, $tiago)
+            ->cria();
+
+        $this->avaliador->avalia($leilao);
         
-        $leilao = new Leilao('Mac da RF', $lances);
-        
-        $avaliador = new Avaliador();
-        $avaliador->avalia($leilao);
-        
-        $this->assertEquals(3, count($avaliador->getTresMaiores()));
-        $this->assertEquals([500, 400, 350], $avaliador->getTresMaiores());
+        $this->assertEquals(3, count($this->avaliador->getTresMaiores()));
+        $this->assertEquals([500, 400, 350], $this->avaliador->getTresMaiores());
     }
 }

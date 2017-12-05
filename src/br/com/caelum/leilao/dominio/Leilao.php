@@ -8,7 +8,7 @@ class Leilao
     private $qtdLances;
     private $maiorLance = -INF;
     
-    public function __construct($descricao, array $lances)
+    public function __construct($descricao = '', array $lances = [])
     {
         $this->descricao = $descricao;
         $this->lances = $lances;

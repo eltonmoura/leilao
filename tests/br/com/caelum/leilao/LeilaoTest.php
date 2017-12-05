@@ -5,86 +5,85 @@ use PHPUnit\Framework\TestCase;
 use src\br\com\caelum\leilao\dominio\Lance;
 use src\br\com\caelum\leilao\dominio\Usuario;
 use src\br\com\caelum\leilao\dominio\Leilao;
+use src\br\com\caelum\leilao\dominio\LeilaoBuilder;
 
 class LeilaoTest extends TestCase
 {
+    public function setUp()
+    {
+        $this->gordo = new Usuario('Andre');
+        $this->ze = new Usuario('Seu Zé');
+        $this->leilaoBuilder = new LeilaoBuilder();
+    }
+
     public function testDeveRetornarUmLance()
     {
-        $gordo = new Usuario('Andre');
-        $lance = new Lance(100, $gordo);
-
-        $leilao = new Leilao('Tinder Premio', []);
-        $leilao->propoe($lance);
+        $leilao = $this->leilaoBuilder
+            ->comDescricao('Tinder Premio')
+            ->comLance(100, $this->gordo)
+            ->cria();
         $this->assertEquals(1, count($leilao->getLances()));
     }
-    
+
     public function testDeveRetornarVariosLances()
     {
-        $gordo = new Usuario('Andre');
-        $se = new Usuario('Seu Zé');
-        
-        $leilao = new Leilao('Tinder Plus', []);
-        
-        $leilao->propoe(new Lance(100, $gordo));
-        $leilao->propoe(new Lance(50, $se));
-        $leilao->propoe(new Lance(250, $gordo));
-        
+        $leilao = $this->leilaoBuilder
+            ->comDescricao('Tinder Plus')
+            ->comLance(100, $this->gordo)
+            ->comLance(50, $this->ze)
+            ->comLance(250, $this->gordo)
+            ->cria();
+
         $this->assertEquals(1, count($leilao->getLances()));
     }
-    
+
     public function testNaoDeveAceitarMaisDe5Lances()
     {
-        $gordo = new Usuario('Andre');
-        $se = new Usuario('Seu Zé');
-        
-        $leilao = new Leilao('Tinder Plus', []);
-        
-        $leilao->propoe(new Lance(50, $gordo));
-        $leilao->propoe(new Lance(55, $se));
-        $leilao->propoe(new Lance(60, $gordo));
-        $leilao->propoe(new Lance(65, $se));
-        $leilao->propoe(new Lance(70, $gordo));
-        $leilao->propoe(new Lance(75, $se));
-        $leilao->propoe(new Lance(80, $gordo));
-        $leilao->propoe(new Lance(85, $se));
-        $leilao->propoe(new Lance(90, $gordo));
-        $leilao->propoe(new Lance(95, $se));
-        $leilao->propoe(new Lance(100, $gordo));
-        $leilao->propoe(new Lance(105, $se));
-       
+        $leilao = $this->leilaoBuilder
+            ->comDescricao('Tinder Plus')
+            ->comLance(50, $this->gordo)
+            ->comLance(55, $this->ze)
+            ->comLance(60, $this->gordo)
+            ->comLance(65, $this->ze)
+            ->comLance(70, $this->gordo)
+            ->comLance(75, $this->ze)
+            ->comLance(80, $this->gordo)
+            ->comLance(85, $this->ze)
+            ->comLance(90, $this->gordo)
+            ->comLance(95, $this->ze)
+            ->comLance(100, $this->gordo)
+            ->comLance(105, $this->ze)
+            ->cria();
+
         $this->assertEquals(10, count($leilao->getLances()));
     }
-    
+
     public function testNaoPodeDarLanceMenor()
     {
-        $gordo = new Usuario('Andre');
-        $se = new Usuario('Seu Zé');
-        
-        $leilao = new Leilao('Tinder Plus', []);
-        
-        $leilao->propoe(new Lance(50, $gordo));
-        $leilao->propoe(new Lance(55, $se));
-        $leilao->propoe(new Lance(60, $gordo));
-        $leilao->propoe(new Lance(10, $se));
-        $leilao->propoe(new Lance(15, $se));
-        
+        $leilao = $this->leilaoBuilder
+            ->comDescricao('Tinder Plus')
+            ->comLance(50, $this->gordo)
+            ->comLance(55, $this->ze)
+            ->comLance(60, $this->gordo)
+            ->comLance(10, $this->ze)
+            ->comLance(15, $this->ze)
+            ->cria();
+
         $this->assertEquals(3, count($leilao->getLances()));
     }
-    
+
     public function testNaoPodeDarLancesSeguidos()
     {
-        $gordo = new Usuario('Andre');
-        $se = new Usuario('Seu Zé');
-        
-        $leilao = new Leilao('Tinder Plus', []);
-        
-        $leilao->propoe(new Lance(50, $gordo));
-        $leilao->propoe(new Lance(55, $se));
-        $leilao->propoe(new Lance(60, $gordo));
-        $leilao->propoe(new Lance(65, $gordo));
-        $leilao->propoe(new Lance(70, $se));
-        $leilao->propoe(new Lance(85, $se));
-        
+        $leilao = $this->leilaoBuilder
+            ->comDescricao('Tinder Plus')
+            ->comLance(50, $this->gordo)
+            ->comLance(55, $this->ze)
+            ->comLance(60, $this->gordo)
+            ->comLance(65, $this->gordo)
+            ->comLance(70, $this->ze)
+            ->comLance(85, $this->ze)
+            ->cria();
+
         $this->assertEquals(4, count($leilao->getLances()));
     }
 }
