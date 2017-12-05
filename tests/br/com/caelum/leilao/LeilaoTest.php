@@ -30,13 +30,16 @@ class LeilaoTest extends TestCase
         $leilao = $this->leilaoBuilder
             ->comDescricao('Tinder Plus')
             ->comLance(100, $this->gordo)
-            ->comLance(50, $this->ze)
+            ->comLance(150, $this->ze)
             ->comLance(250, $this->gordo)
             ->cria();
 
-        $this->assertEquals(1, count($leilao->getLances()));
+        $this->assertEquals(3, count($leilao->getLances()));
     }
 
+    /**
+     * @expectedException \RuntimeException
+     */
     public function testNaoDeveAceitarMaisDe5Lances()
     {
         $leilao = $this->leilaoBuilder
@@ -58,6 +61,9 @@ class LeilaoTest extends TestCase
         $this->assertEquals(10, count($leilao->getLances()));
     }
 
+    /**
+     * @expectedException \RuntimeException
+     */
     public function testNaoPodeDarLanceMenor()
     {
         $leilao = $this->leilaoBuilder
@@ -72,6 +78,9 @@ class LeilaoTest extends TestCase
         $this->assertEquals(3, count($leilao->getLances()));
     }
 
+    /**
+     * @expectedException \RuntimeException
+     */
     public function testNaoPodeDarLancesSeguidos()
     {
         $leilao = $this->leilaoBuilder

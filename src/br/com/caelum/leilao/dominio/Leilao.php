@@ -17,17 +17,18 @@ class Leilao
     public function propoe(Lance $lance)
     {
         if ($this->getQtdPorUsuario($lance->getUsuario()) >= 5) {
-            return false;
+            throw new \RuntimeException();
         }
 
         $ultimoLance = end($this->lances);
         if ($ultimoLance && $ultimoLance->getUsuario() == $lance->getUsuario()) {
-            return false;
+            throw new \RuntimeException();
         }
 
         if ($lance->getValor() <= $this->maiorLance) {
-            return false;
+            throw new \RuntimeException();
         }
+
         $this->maiorLance = $lance->getValor();
 
         $this->addQtdPorUsuario($lance->getUsuario());

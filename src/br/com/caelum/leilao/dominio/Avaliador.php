@@ -10,10 +10,7 @@ class Avaliador
     public function avalia(Leilao $leilao)
     {
         if (empty($leilao->getLances())) {
-            $this->menorValor = 0;
-            $this->maiorValor = 0;
-            $this->valorMedio = 0;
-            return true;
+            throw new \RuntimeException();
         }
 
         $valores = [];

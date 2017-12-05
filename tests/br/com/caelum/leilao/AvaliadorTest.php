@@ -66,6 +66,9 @@ class AvaliadorTest extends TestCase
         $this->assertEquals(330, $this->avaliador->getValorMedio());
     }
 
+    /**
+     * @expectedException \RuntimeException
+     */
     public function testAvaliaComLancesDecrescentes()
     {
         $joao = new Usuario('Joao');
@@ -81,10 +84,6 @@ class AvaliadorTest extends TestCase
             ->cria();
 
         $this->avaliador->avalia($leilao);
-
-        $this->assertEquals(700, $this->avaliador->getMenorValor());
-        $this->assertEquals(700, $this->avaliador->getMaiorValor());
-        $this->assertEquals(700, $this->avaliador->getValorMedio());
     }
 
     public function testAvaliaComUmLance()
@@ -103,6 +102,9 @@ class AvaliadorTest extends TestCase
         $this->assertEquals(300, $this->avaliador->getValorMedio());
     }
     
+    /**
+     * @expectedException \RuntimeException
+     */
     public function testAvaliaSemLances()
     {
         $lances = [];
@@ -112,10 +114,6 @@ class AvaliadorTest extends TestCase
             ->cria();
         
         $this->avaliador->avalia($leilao);
-        
-        $this->assertEquals(0, $this->avaliador->getMenorValor());
-        $this->assertEquals(0, $this->avaliador->getMaiorValor());
-        $this->assertEquals(0, $this->avaliador->getValorMedio());
     }
 
     public function testDeveEncontrarOsTresMaioresLances()
