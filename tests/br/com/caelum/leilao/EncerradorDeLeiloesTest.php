@@ -3,8 +3,8 @@ namespace tests\br\com\caelum\leilao;
 
 use PHPUnit\Framework\TestCase;
 use src\br\com\caelum\leilao\dominio\EncerradorDeLeiloes;
-use src\br\com\caelum\leilao\dominio\LeilaoCrudDaoInterface;
-use src\br\com\caelum\leilao\dominio\EnviadorDeEmailInterface;
+use src\br\com\caelum\leilao\dominio\interfaces\LeilaoCrudDaoInterface;
+use src\br\com\caelum\leilao\dominio\interfaces\EnviadorDeEmailInterface;
 use src\br\com\caelum\leilao\dominio\LeilaoBuilder;
 
 /**

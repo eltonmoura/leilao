@@ -1,6 +1,9 @@
 <?php
 namespace src\br\com\caelum\leilao\dominio;
 
+use src\br\com\caelum\leilao\dominio\interfaces\LeilaoCrudDaoInterface;
+use src\br\com\caelum\leilao\dominio\interfaces\EnviadorDeEmailInterface;
+
 class EncerradorDeLeiloes
 {
     private $dao;
