@@ -3,6 +3,7 @@ namespace tests\br\com\caelum\leilao;
 
 use PHPUnit\Framework\TestCase;
 use src\br\com\caelum\leilao\dominio\EncerradorDeLeiloes;
+use src\br\com\caelum\leilao\dominio\LeilaoCrudDaoInterface;
 use src\br\com\caelum\leilao\dominio\EnviadorDeEmailInterface;
 use src\br\com\caelum\leilao\dominio\LeilaoBuilder;
 
@@ -15,13 +16,13 @@ class EncerradorDeLeiloesTest extends TestCase
     {
         $leilaoBuildor = new LeilaoBuilder();
 
-        $data = (new \DateTime())->sub(new \DateInterval("P100D"));
+        $data = (new \DateTime())->sub(new \DateInterval("P8D"));
 
         $leilao = $leilaoBuildor->comDescricao('Coracao do Jojo')
             ->naData($data)
             ->cria();
 
-        $dao = $this->createMock(LeilaoCrudDao::class);
+        $dao = $this->createMock(LeilaoCrudDaoInterface::class);
         
         $carterio = $this->createMock(EnviadorDeEmailInterface::class);
 
@@ -48,7 +49,7 @@ class EncerradorDeLeiloesTest extends TestCase
             ->naData($data)
             ->cria();
 
-        $dao = $this->createMock(LeilaoCrudDao::class);
+        $dao = $this->createMock(LeilaoCrudDaoInterface::class);
 
         $carterio = $this->createMock(EnviadorDeEmailInterface::class);
 

@@ -1,15 +1,13 @@
 <?php
 namespace src\br\com\caelum\leilao\dominio;
 
-use tests\br\com\caelum\leilao\LeilaoCrudDao;
-
 class EncerradorDeLeiloes
 {
     private $dao;
     private $total = 0;
     private $carteiro;
 
-    public function __construct(LeilaoCrudDao $dao, EnviadorDeEmailInterface $carteiro)
+    public function __construct(LeilaoCrudDaoInterface $dao, EnviadorDeEmailInterface $carteiro)
     {   
         $this->dao = $dao;
         $this->carteiro = $carteiro;
