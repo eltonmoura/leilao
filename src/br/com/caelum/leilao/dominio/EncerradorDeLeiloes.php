@@ -7,10 +7,12 @@ class EncerradorDeLeiloes
 {
     private $dao;
     private $total = 0;
+    private $carteiro;
 
-    public function __construct(LeilaoCrudDao $dao)
+    public function __construct(LeilaoCrudDao $dao, EnviadorDeEmailInterface $carteiro)
     {   
         $this->dao = $dao;
+        $this->carteiro = $carteiro;
     }
     
     public function encerrar()
@@ -22,6 +24,7 @@ class EncerradorDeLeiloes
                 $leilao->encerra();
                 $this->total++;
                 $this->dao->atualiza($leilao);
+                $this->carteiro->envia($leilao);
             }
         }
     }

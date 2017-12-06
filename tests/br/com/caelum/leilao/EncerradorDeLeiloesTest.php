@@ -3,6 +3,7 @@ namespace tests\br\com\caelum\leilao;
 
 use PHPUnit\Framework\TestCase;
 use src\br\com\caelum\leilao\dominio\EncerradorDeLeiloes;
+use src\br\com\caelum\leilao\dominio\EnviadorDeEmailInterface;
 use src\br\com\caelum\leilao\dominio\LeilaoBuilder;
 
 /**
@@ -14,41 +15,52 @@ class EncerradorDeLeiloesTest extends TestCase
     {
         $leilaoBuildor = new LeilaoBuilder();
 
+        $data = (new \DateTime())->sub(new \DateInterval("P100D"));
+
         $leilao = $leilaoBuildor->comDescricao('Coracao do Jojo')
-            ->naData(new \DateTime('1970-01-01'))
+            ->naData($data)
             ->cria();
 
         $dao = $this->createMock(LeilaoCrudDao::class);
         
+        $carterio = $this->createMock(EnviadorDeEmailInterface::class);
+
         $dao->method('correntes')
             ->will($this->returnValue([$leilao]));
 
-        $encerrador = new EncerradorDeLeiloes($dao);
+        $dao->expects($this->atLeastOnce())->method('atualiza');
+        $carterio->expects($this->atLeastOnce())->method('envia');
+
+        $encerrador = new EncerradorDeLeiloes($dao, $carterio);
         $encerrador->encerrar();
 
         $this->assertTrue($leilao->getEncerrado());
         $this->assertEquals(1, $encerrador->getTotal());
     }
     
-    public function testDeveEncerrarLeiloesDeUmaSemana()
+    public function testNaoDeveEncerrarLeiloesDeMenosUmaSemana()
     {
         $leilaoBuilder = new LeilaoBuilder();
-        
-        $data = new \DateTime();
-        $data->sub(new \DateInterval("P6D"));
-        
+
+        $data = (new \DateTime())->sub(new \DateInterval("P6D"));
+
         $leilao = $leilaoBuilder->comDescricao('Coracao do Jojo')
             ->naData($data)
             ->cria();
 
         $dao = $this->createMock(LeilaoCrudDao::class);
-        
+
+        $carterio = $this->createMock(EnviadorDeEmailInterface::class);
+
         $dao->method('correntes')
             ->will($this->returnValue([$leilao]));
-        
-        $encerrador = new EncerradorDeLeiloes($dao);
+
+        $dao->expects($this->never())->method('atualiza');
+        $carterio->expects($this->never())->method('envia');
+
+        $encerrador = new EncerradorDeLeiloes($dao, $carterio);
         $encerrador->encerrar();
-        
+
         $this->assertFalse($leilao->getEncerrado());
         $this->assertEquals(0, $encerrador->getTotal());
     }
