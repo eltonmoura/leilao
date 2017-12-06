@@ -89,19 +89,19 @@ class AvaliadorTest extends TestCase
     public function testAvaliaComUmLance()
     {
         $joao = new Usuario('Joao');
-        
+
         $leilao = $this->leilaoBuilder
             ->comDescricao('Mac da RF')
             ->comLance(300.0, $joao)
             ->cria();
-        
+
         $this->avaliador->avalia($leilao);
-        
+
         $this->assertEquals(300, $this->avaliador->getMenorValor());
         $this->assertEquals(300, $this->avaliador->getMaiorValor());
         $this->assertEquals(300, $this->avaliador->getValorMedio());
     }
-    
+
     /**
      * @expectedException \RuntimeException
      */
@@ -112,7 +112,7 @@ class AvaliadorTest extends TestCase
         $leilao = $this->leilaoBuilder
             ->comDescricao('Mac da RF')
             ->cria();
-        
+
         $this->avaliador->avalia($leilao);
     }
 
@@ -123,7 +123,7 @@ class AvaliadorTest extends TestCase
         $jose = new Usuario('Jose');
         $pedro = new Usuario('Pedro');
         $tiago = new Usuario('Tiago');
-        
+
         $leilao = $this->leilaoBuilder
             ->comDescricao('Mac da RF')
             ->comLance(150.0, $maria)
@@ -134,7 +134,7 @@ class AvaliadorTest extends TestCase
             ->cria();
 
         $this->avaliador->avalia($leilao);
-        
+
         $this->assertEquals(3, count($this->avaliador->getTresMaiores()));
         $this->assertEquals([500, 400, 350], $this->avaliador->getTresMaiores());
     }
