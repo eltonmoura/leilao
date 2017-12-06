@@ -21,11 +21,15 @@ class EncerradorDeLeiloes
         $leiloesCorrentes = $this->dao->correntes();
         
         foreach ($leiloesCorrentes as $leilao) {
-            if ($this->comecouSemanaPassada($leilao)) {
-                $leilao->encerra();
-                $this->total++;
-                $this->dao->atualiza($leilao);
-                $this->carteiro->envia($leilao);
+            try {
+                if ($this->comecouSemanaPassada($leilao)) {
+                    $leilao->encerra();
+                    $this->dao->atualiza($leilao);
+                    $this->total++;
+                    $this->carteiro->envia($leilao);
+                }
+            } catch (\PDOException $e) {
+                /// Logar
             }
         }
     }
