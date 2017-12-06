@@ -11,15 +11,15 @@ class EncerradorDeLeiloes
     private $carteiro;
 
     public function __construct(LeilaoCrudDaoInterface $dao, EnviadorDeEmailInterface $carteiro)
-    {   
+    {
         $this->dao = $dao;
         $this->carteiro = $carteiro;
     }
-    
+
     public function encerrar()
     {
         $leiloesCorrentes = $this->dao->correntes();
-        
+
         foreach ($leiloesCorrentes as $leilao) {
             try {
                 if ($this->comecouSemanaPassada($leilao)) {
@@ -39,7 +39,7 @@ class EncerradorDeLeiloes
         $dataSemanaPassada = (new \DateTime())->sub(new \DateInterval('P7D'));
         return ($leilao->getData() < $dataSemanaPassada);
     }
-    
+
     public function getTotal()
     {
         return $this->total;

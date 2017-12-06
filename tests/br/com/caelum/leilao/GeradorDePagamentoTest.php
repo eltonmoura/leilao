@@ -15,19 +15,19 @@ class GeradorDePagamentoTest extends TestCase
     {
         $leiloes = $this->createMock(RepositorioDeLeiloesInterface::class);
         $pagamentos = $this->createMock(RepositorioDePagamentosInterface::class);
-        
+
         $leilaoBuilder = new LeilaoBuilder();
-        
+
         $leilao = $leilaoBuilder
             ->comDescricao('Um Leilao')
             ->comLance(150.0, new Usuario('João'))
             ->naData(new \DateTime())
             ->cria();
-        
+
         $leiloes->method('leiloesEncerrados')->will($this->returnValue([$leilao]));
-        
+
         $geradorDePagamento = new GeradorDePagamento($leiloes, $pagamentos, new Avaliador());
-        
+
         $pagamentos = $geradorDePagamento->gera();
         $pagamentoGerado = $pagamentos[0];
         $this->assertEquals(3, $pagamentoGerado->getData()->format('w'));

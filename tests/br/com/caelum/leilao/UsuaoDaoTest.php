@@ -20,14 +20,14 @@ class UsuaoDaoTest extends TestCase
         $this->con->beginTransaction();
         $this->dao = new UsuarioDao($this->con);
     }
-    
+
     public function testDeveRetornarUsuarioPorNomeEEmail()
     {
         $usuario = new Usuario('Zé', 'ze@bol.com.br');
         $this->dao->salvar($usuario);
-        
-        $usuarioDoBanco = $this->dao->porNomeEEmail($usuario->getNome(), $usuario->getEmail());        
-        
+
+        $usuarioDoBanco = $this->dao->porNomeEEmail($usuario->getNome(), $usuario->getEmail());
+
         $this->assertEquals($usuario->getNome(), $usuarioDoBanco->getNome());
     }
 }

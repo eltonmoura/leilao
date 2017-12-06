@@ -3,6 +3,8 @@ namespace src\br\com\caelum\leilao\dominio;
 
 class Leilao
 {
+    const QTD_LANCES_POR_USUARIO = 5;
+
     private $descricao;
     private $lances;
     private $qtdLances;
@@ -19,7 +21,7 @@ class Leilao
 
     public function propoe(Lance $lance)
     {
-        if ($this->getQtdPorUsuario($lance->getUsuario()) >= 5) {
+        if ($this->getQtdPorUsuario($lance->getUsuario()) >= self::QTD_LANCES_POR_USUARIO) {
             throw new \RuntimeException();
         }
 

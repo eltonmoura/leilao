@@ -1,30 +1,33 @@
 <?php
-require_once("bootstrap.php");
+require_once './bootstrap.php';
+
 use src\br\com\caelum\leilao\factory\ConnectionFactory;
 
-
-function criaDatabase(){
+function criaDatabase()
+{
     try {
-    	$db = ConnectionFactory::getDatabase();
+        $db = ConnectionFactory::getDatabase();
     
-        $con = ConnectionFactory::getConnectionWithoutDb(); 
+        $con = ConnectionFactory::getConnectionWithoutDb();
 
-        $criou = $con->exec("CREATE DATABASE `$db`"); 
+        $criou = $con->exec("CREATE DATABASE `$db`");
         
-		echo $criou ? "Database ".$db." criada com sucesso!\n" : "Database ".$db." já existe\n";
+        echo $criou ? "Database ".$db." criada com sucesso!\n" : "Database ".$db." já existe\n";
     } catch (PDOException $e) {
         die("DB ERROR: ". $e->getMessage());
     }
 }
-function criaTabelas() {
-	$db = ConnectionFactory::getDatabase();
-    
-    $con = ConnectionFactory::getConnectionWithoutDb(); 
 
-	$sql = "use ".$db;
+function criaTabelas()
+{
+    $db = ConnectionFactory::getDatabase();
+    
+    $con = ConnectionFactory::getConnectionWithoutDb();
+
+    $sql = "use ".$db;
     $con->exec($sql);
 
-	$sql = "CREATE TABLE IF NOT EXISTS Usuario (
+    $sql = "CREATE TABLE IF NOT EXISTS Usuario (
                 id int(11) AUTO_INCREMENT PRIMARY KEY,
                 nome varchar(255) NOT NULL,
                 email varchar(255) NOT NULL)";

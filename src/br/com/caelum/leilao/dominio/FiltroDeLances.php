@@ -6,7 +6,7 @@ class FiltroDeLances
     public function filtra(array $lances)
     {
         $resultado = [];
-        
+ 
         foreach ($lances as $lance) {
             if ($lance->getValor() > 1000 && $lance->getValor() < 3000) {
                 $resultado[] = $lance;
