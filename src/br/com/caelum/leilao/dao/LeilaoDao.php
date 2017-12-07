@@ -18,15 +18,11 @@ class LeilaoDao
     }
 
     public function salvar(Leilao $leilao)
-    {
+    {        
         $nome = $leilao->getDescricao();
         $valorInicial = $leilao->getValorInicial();
 
         $dono = $leilao->getDono();
-        if (! empty($dono)) {
-            $usuarioDao = new UsuarioDao($this->con);
-            $usuarioDao->salvar($dono);
-        }
 
         $donoId = $dono->getId();
 
@@ -53,8 +49,11 @@ class LeilaoDao
         $leilao->setId($this->con->lastInsertId());
 
         foreach ($leilao->getLances() as $lance) {
+            $lance->setLeilao($leilao);
             $this->salvarLance($lance);
         }
+
+        return true;
     }
 
     private function salvarLance(Lance $lance)
@@ -65,16 +64,18 @@ class LeilaoDao
             $usuarioDao->salvar($usuario);
         }
 
+        $usuarioId = $usuario->getId();
+
         $data = ($lance->getData() !== null) ? $lance->getData()->format('Y-m-d') : null;
         $valor = $lance->getValor();
+ 
         $leilaoId = ($lance->getLeilao() !== null) ? $lance->getLeilao()->getId() : null;
-
         $stmt = $this->con->prepare('
             INSERT INTO Lance(usuario,data,valor,leilao)
             VALUES(:usuario,:data,:valor,:leilao)
         ');
 
-        $stmt->bindParam('usuario', $usuario->getId());
+        $stmt->bindParam('usuario', $usuarioId);
         $stmt->bindParam('data', $data);
         $stmt->bindParam('valor', $valor);
         $stmt->bindParam('leilao', $leilaoId);
@@ -82,7 +83,7 @@ class LeilaoDao
         $stmt->execute();
 
         if (! $stmt->execute()) {
-            throw new \Exception('Erro ao salvar Lance (' . json_encode($stmt->errorInfo()) . ')');
+            throw new \Exception('Erro ao salvar Lance (' . $stmt->errorInfo()[2] . ')');
         }
     }
 

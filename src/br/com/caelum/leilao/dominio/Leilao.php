@@ -38,6 +38,8 @@ class Leilao
             throw new \RuntimeException();
         }
 
+        $lance->setLeilao($this);
+
         $this->maiorLance = $lance->getValor();
 
         $this->addQtdPorUsuario($lance->getUsuario());

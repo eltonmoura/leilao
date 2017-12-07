@@ -34,4 +34,9 @@ class Lance
     {
         return $this->leilao;
     }
+    
+    public function setLeilao(Leilao $leilao)
+    {
+        $this->leilao = $leilao;
+    }
 }
