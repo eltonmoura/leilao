@@ -30,6 +30,6 @@ class GeradorDePagamentoTest extends TestCase
 
         $pagamentos = $geradorDePagamento->gera();
         $pagamentoGerado = $pagamentos[0];
-        $this->assertEquals(3, $pagamentoGerado->getData()->format('w'));
+        $this->assertEquals(4, $pagamentoGerado->getData()->format('w'));
     }
 }

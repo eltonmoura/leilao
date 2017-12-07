@@ -11,6 +11,10 @@ class Leilao
     private $maiorLance = -INF;
     private $data;
     private $encerrado;
+    private $dono;
+    private $id;
+    private $usado;
+    private $isEncerrado;
 
     public function __construct($descricao = '', array $lances = [])
     {
@@ -73,6 +77,11 @@ class Leilao
         return $this->data;
     }
 
+    public function setData(\DateTime $data)
+    {
+        $this->data = $data;
+    }
+
     public function getEncerrado()
     {
         return $this->encerrado;
@@ -88,11 +97,6 @@ class Leilao
         $this->lances = $lances;
     }
 
-    public function setData(\DateTime $data)
-    {
-        $this->data = $data;
-    }
-
     public function setEncerrado(bool $encerrado)
     {
         $this->encerrado = $encerrado;
@@ -101,5 +105,43 @@ class Leilao
     public function encerra()
     {
         $this->encerrado = true;
+    }
+
+    public function getValorInicial()
+    {
+        if (isset($this->lances[0])) {
+            return $this->lances[0]->getValor();
+        }
+        return null;
+    }
+
+    public function getDono()
+    {
+        return $this->dono;
+    }
+
+    public function setDono(Usuario $dono)
+    {
+        $this->dono = $dono;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId(int $id)
+    {
+        $this->id = $id;
+    }
+
+    public function getUsado()
+    {
+        return $this->usado;
+    }
+
+    public function isEncerrado()
+    {
+        return $this->isEncerrado;
     }
 }

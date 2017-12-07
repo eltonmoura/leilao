@@ -38,7 +38,7 @@ function criaTabelas()
                 nome varchar(255) NOT NULL,
                 valorInicial double NOT NULL,
                 dono int NOT NULL,
-                dataAbertura date NOT NULL,
+                dataAbertura datetime NOT NULL,
                 usado boolean,
                 encerrado boolean)";
     $con->exec($sql);
@@ -46,7 +46,7 @@ function criaTabelas()
     $sql = "CREATE TABLE IF NOT EXISTS Lance (
                 id int(11) AUTO_INCREMENT PRIMARY KEY,
                 usuario int NOT NULL,
-                data date NOT NULL,
+                data datetime NOT NULL,
                 valor double NOT NULL,
                 leilao int NOT NULL)";
     $con->exec($sql);

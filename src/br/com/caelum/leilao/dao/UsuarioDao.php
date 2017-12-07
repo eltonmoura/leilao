@@ -1,7 +1,7 @@
 <?php
 namespace src\br\com\caelum\leilao\dao;
 
-use PDO;
+use \PDO;
 use src\br\com\caelum\leilao\dominio\Usuario;
 
 class UsuarioDao
@@ -44,6 +44,11 @@ class UsuarioDao
     {
         $nome = $usuario->getNome();
         $email = $usuario->getEmail();
+
+        $usuarioExistente = $this->porNomeEEmail($nome, $email);
+        if (! empty($usuarioExistente)) {
+            return $this->atualizar($usuarioExistente);
+        }
 
         $stmt = $this->con->prepare('INSERT INTO Usuario (nome,email) VALUES(:nome,:email)');
         $stmt->bindParam('nome', $nome);

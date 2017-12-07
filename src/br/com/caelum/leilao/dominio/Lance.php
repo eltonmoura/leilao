@@ -5,11 +5,14 @@ class Lance
 {
     private $valor;
     private $usuario;
+    private $data;
+    private $leilao;
 
     public function __construct(float $valor, Usuario $usuario)
     {
         $this->valor = $valor;
         $this->usuario = $usuario;
+        $this->data = new \DateTime();
     }
 
     public function getValor()
@@ -20,5 +23,15 @@ class Lance
     public function getUsuario()
     {
         return $this->usuario;
+    }
+
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    public function getLeilao()
+    {
+        return $this->leilao;
     }
 }

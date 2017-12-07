@@ -22,6 +22,12 @@ class LeilaoBuilder
         return $this;
     }
 
+    public function comDono(Usuario $dono)
+    {
+        $this->leilao->setDono($dono);
+        return $this;
+    }
+
     public function naData(\DateTime $data)
     {
         $this->leilao->setData($data);

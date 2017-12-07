@@ -19,16 +19,24 @@ class LeilaoDao
 
     public function salvar(Leilao $leilao)
     {
-        $nome = $leilao->getNome();
+        $nome = $leilao->getDescricao();
         $valorInicial = $leilao->getValorInicial();
-        $donoId = $leilao->getDono()->getId();
-        $dataAbertura = $leilao->getDataAbertura()->format('Y-m-d');
+
+        $dono = $leilao->getDono();
+        if (! empty($dono)) {
+            $usuarioDao = new UsuarioDao($this->con);
+            $usuarioDao->salvar($dono);
+        }
+
+        $donoId = $dono->getId();
+
+        $dataAbertura = $leilao->getData()->format('Y-m-d H:i:s');
         $usado = $leilao->getUsado();
         $encerrado = $leilao->isEncerrado();
 
         $stmt = $this->con->prepare('
-            INSERT INTO Leilao(nome,valorInicial,dono,dataAbertura,usado,encerrado)
-            VALUES(:nome,:valorInicial,:dono,:dataAbertura,:usado,:encerrado)
+            INSERT INTO Leilao(nome, valorInicial, dono, dataAbertura, usado, encerrado)
+            VALUES(:nome, :valorInicial, :dono, :dataAbertura, :usado, :encerrado)
         ');
 
         $stmt->bindParam('nome', $nome);
@@ -38,7 +46,9 @@ class LeilaoDao
         $stmt->bindParam('usado', $usado, PDO::PARAM_BOOL);
         $stmt->bindParam('encerrado', $encerrado, PDO::PARAM_BOOL);
 
-        $stmt->execute();
+        if (! $stmt->execute()) {
+            throw new \Exception('Erro ao salvar Leilao (' . $stmt->errorInfo()[2] . ')');
+        }
 
         $leilao->setId($this->con->lastInsertId());
 
@@ -49,22 +59,31 @@ class LeilaoDao
 
     private function salvarLance(Lance $lance)
     {
-        $id = $lance->getUsuario()->getId();
-        $data = $lance->getData()->format('Y-m-d');
+        $usuario = $lance->getUsuario();
+        if (! empty($usuario)) {
+            $usuarioDao = new UsuarioDao($this->con);
+            $usuarioDao->salvar($usuario);
+        }
+
+        $data = ($lance->getData() !== null) ? $lance->getData()->format('Y-m-d') : null;
         $valor = $lance->getValor();
-        $leilaoId = $lance->getLeilao()->getId();
+        $leilaoId = ($lance->getLeilao() !== null) ? $lance->getLeilao()->getId() : null;
 
         $stmt = $this->con->prepare('
             INSERT INTO Lance(usuario,data,valor,leilao)
             VALUES(:usuario,:data,:valor,:leilao)
         ');
 
-        $stmt->bindParam('usuario', $id);
+        $stmt->bindParam('usuario', $usuario->getId());
         $stmt->bindParam('data', $data);
         $stmt->bindParam('valor', $valor);
         $stmt->bindParam('leilao', $leilaoId);
 
         $stmt->execute();
+
+        if (! $stmt->execute()) {
+            throw new \Exception('Erro ao salvar Lance (' . json_encode($stmt->errorInfo()) . ')');
+        }
     }
 
     public function porId(int $id)
@@ -109,8 +128,8 @@ class LeilaoDao
 
     public function porPeriodo(DateTime $inicio, DateTime $fim) : array
     {
-        $inicio = $inicio->format('Y-m-d');
-        $fim = $fim->format('Y-m-d');
+        $inicio = $inicio->format('Y-m-d H:i:s');
+        $fim = $fim->format('Y-m-d H:i:s');
 
         $stmt = $this->con->prepare('
             SELECT * FROM Leilao
@@ -167,7 +186,7 @@ class LeilaoDao
         $nome = $leilao->getNome();
         $valorInicial = $leilao->getValorInicial();
         $donoId = $leilao->getDono()->getId();
-        $dataAbertura = $leilao->getDataAbertura()->format('Y-m-d');
+        $dataAbertura = $leilao->getDataAbertura()->format('Y-m-d H:i:s');
         $usado = $leilao->getUsado();
         $encerrado = $leilao->isEncerrado();
         $id = $leilao->getId();
@@ -187,6 +206,10 @@ class LeilaoDao
         $stmt->bindParam('id', $id);
 
         $stmt->execute();
+
+        if (! $stmt->execute()) {
+            throw new \Exception('Erro ao atualizar Leilao (' . $stmt->errorInfo()[2] . ')');
+        }
     }
 
     public function deletar(Leilao $leilao)
@@ -197,12 +220,20 @@ class LeilaoDao
         $stmt->bindParam('id', $id);
 
         $stmt->execute();
+
+        if (! $stmt->execute()) {
+            throw new \Exception('Erro ao remover Leilao (' . $stmt->errorInfo()[2] . ')');
+        }
     }
 
     public function deletaEncerrados()
     {
         $stmt = $this->con->prepare('DELETE FROM Leilao WHERE encerrado = true');
         $stmt->execute();
+
+        if (! $stmt->execute()) {
+            throw new \Exception('Erro ao remover Leilao (' . $stmt->errorInfo()[2] . ')');
+        }
     }
 
     public function listaLeiloesDoUsuario(Usuario $usuario)
