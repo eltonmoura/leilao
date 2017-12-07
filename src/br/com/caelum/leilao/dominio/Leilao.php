@@ -14,7 +14,6 @@ class Leilao
     private $dono;
     private $id;
     private $usado;
-    private $isEncerrado;
 
     public function __construct($descricao = '', array $lances = [])
     {
@@ -36,6 +35,10 @@ class Leilao
 
         if ($lance->getValor() <= $this->maiorLance) {
             throw new \RuntimeException();
+        }
+        
+        if (count($this->lances) == 0) {
+            $this->valorInicial = $lance->getValor();
         }
 
         $lance->setLeilao($this);
@@ -84,7 +87,7 @@ class Leilao
         $this->data = $data;
     }
 
-    public function getEncerrado()
+    public function isEncerrado()
     {
         return $this->encerrado;
     }
@@ -96,12 +99,9 @@ class Leilao
 
     public function setLances(array $lances)
     {
-        $this->lances = $lances;
-    }
-
-    public function setEncerrado(bool $encerrado)
-    {
-        $this->encerrado = $encerrado;
+        foreach ($lances as $lance) {
+            $this->propoe($lance);
+        }
     }
 
     public function encerra()
@@ -111,10 +111,7 @@ class Leilao
 
     public function getValorInicial()
     {
-        if (isset($this->lances[0])) {
-            return $this->lances[0]->getValor();
-        }
-        return null;
+        return $this->valorInicial;
     }
 
     public function getDono()
@@ -142,8 +139,8 @@ class Leilao
         return $this->usado;
     }
 
-    public function isEncerrado()
+    public function setUsado(bool $usado)
     {
-        return $this->isEncerrado;
+        $this->usado = $usado;
     }
 }

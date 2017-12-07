@@ -35,7 +35,7 @@ class EncerradorDeLeiloesTest extends TestCase
         $encerrador = new EncerradorDeLeiloes($dao, $carterio);
         $encerrador->encerrar();
 
-        $this->assertTrue($leilao->getEncerrado());
+        $this->assertTrue($leilao->isEncerrado());
         $this->assertEquals(1, $encerrador->getTotal());
     }
     
@@ -62,7 +62,7 @@ class EncerradorDeLeiloesTest extends TestCase
         $encerrador = new EncerradorDeLeiloes($dao, $carterio);
         $encerrador->encerrar();
 
-        $this->assertFalse($leilao->getEncerrado());
+        $this->assertFalse($leilao->isEncerrado());
         $this->assertEquals(0, $encerrador->getTotal());
     }
 
@@ -90,7 +90,7 @@ class EncerradorDeLeiloesTest extends TestCase
         $encerrador = new EncerradorDeLeiloes($dao, $carterio);
         $encerrador->encerrar();
 
-        $this->assertTrue($leilao->getEncerrado());
+        $this->assertTrue($leilao->isEncerrado());
         $this->assertEquals(0, $encerrador->getTotal());
     }
 }

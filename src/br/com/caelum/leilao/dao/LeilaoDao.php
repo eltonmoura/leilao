@@ -29,7 +29,7 @@ class LeilaoDao
         $dataAbertura = $leilao->getData()->format('Y-m-d H:i:s');
         $usado = $leilao->getUsado();
         $encerrado = $leilao->isEncerrado();
-
+        #echo "\n$nome ". var_dump($encerrado);
         $stmt = $this->con->prepare('
             INSERT INTO Leilao(nome, valorInicial, dono, dataAbertura, usado, encerrado)
             VALUES(:nome, :valorInicial, :dono, :dataAbertura, :usado, :encerrado)
@@ -85,6 +85,8 @@ class LeilaoDao
         if (! $stmt->execute()) {
             throw new \Exception('Erro ao salvar Lance (' . $stmt->errorInfo()[2] . ')');
         }
+        
+        return true;
     }
 
     public function porId(int $id)
